@@ -1,6 +1,7 @@
-This is a non-school related project.
+### Bring your ASCII worlds to life! A picture is worth 1000 words as they say.
 
-Bring your ASCII worlds to life! A picture is worth 1000 words as they say.
+![](ASCII_To_PNG_Map_Generator.PNG)
+
 In a nutshell this program translates level01.txt into final_map.png
 The cool thing is that level01.txt, could be any text file, and
 the tiles can be whatever you want (see png_input folder)
