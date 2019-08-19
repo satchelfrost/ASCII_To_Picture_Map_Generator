@@ -8,40 +8,28 @@ void PNGtoTGA(string, string, float, float);
 void buildHorizontal(vector<string>&, map<char, string>&, vector<TGA>&);
 void buildVertical(vector<TGA>&);
 void TGAtoPNG(string);
-void createTGAs(vector<string>&);
+void createTGAs(map<char, string>&);
 void readLevel(vector<string>&, string);
-void createMap(map<char, string>&, vector<string>&, vector<char>&);
 
 int main()
 {
-	vector<string> fileNames = 
-	{ "grass", 
-	  "wall", 
-	  "forward_slope", 
-          "back_slope",
-	  "stone_of_truth", 
-	  "health" 
-	};
-
-	vector<char> characters = 
-	{ '.', 
-	  '#', 
-	  '/', 
-	  '\\', 
-          '*', 
-	  '+' 
-	};
 	
 	//create a map that translates characters to PNG file names
-	map<char, string> fileMap;
-	createMap(fileMap, fileNames, characters);
+	map<char, string> fileMap {
+		{'.',"grass"},
+		{'#', "wall"},
+		{'/',"forward_slope"},
+		{'\\',"back_slope"},
+		{'*',"stone_of_truth"},
+		{'+', "health"}
+	};
 
 	//store level text into a vector of strings
 	vector<string> level;
 	readLevel(level, "level01");
 
-	//create tga files
-	createTGAs(fileNames);
+	//create tga files; note the string portion of the fileMap is the file name
+	createTGAs(fileMap);
 
 	//translate the ascii world into the picture world
 	vector<TGA> TGAfiles;
@@ -102,10 +90,12 @@ void TGAtoPNG(string fileName)
 	map.getTexture()->copyToImage().saveToFile("png_output/" + fileName + ".png");
 }
 
-void createTGAs(vector<string>& fileNames)
+void createTGAs(map<char, string>& fileMap)
 {
-	for (auto fileName : fileNames)
+	for (auto itr = fileMap.begin(); itr != fileMap.end(); itr++) {
+		string fileName = itr->second;
 		PNGtoTGA("png_input", fileName, 32.0f, 32.0f);
+	}
 }
 
 void readLevel(vector<string>& level, string levelName)
@@ -116,21 +106,3 @@ void readLevel(vector<string>& level, string levelName)
 	while (getline(inputFile, input)) level.push_back(input);
 	inputFile.close();
 }
-
-void createMap(map<char, string>& map, vector<string>& names, vector<char>& chars)
-{
-	if (names.size() != chars.size()) {
-		cout << "Cannot create map."
-			 << "Characters and filenames are mismatching" << endl;
-		return;
-	}
-	for (unsigned int i = 0; i < names.size(); i++)
-		map.emplace(chars[i], names[i]);
-}
-
-
-
-
-
-
-
